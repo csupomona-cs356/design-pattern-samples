@@ -1,6 +1,8 @@
-package edu.csupomona.cs356.visitor;
+package edu.csupomona.cs356;
 
 import java.util.List;
+
+import edu.csupomona.cs356.visitor.AutoElementVisitor;
 
 public class Car extends AutoElement {
 
@@ -13,5 +15,13 @@ public class Car extends AutoElement {
 	public void setComponents(List<AutoElement> components) {
 		this.components = components;
 	}
+
+	@Override
+	public void accept(AutoElementVisitor visitor) {
+		for(AutoElement ae : components) {
+			ae.accept(visitor);
+		}		
+	}	
 		
+	
 }

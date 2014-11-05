@@ -1,4 +1,7 @@
-package edu.csupomona.cs356.visitor;
+package edu.csupomona.cs356;
+
+import edu.csupomona.cs356.visitor.AutoElementVisitor;
+
 
 public abstract class AutoElement {
 	
@@ -28,6 +31,8 @@ public abstract class AutoElement {
 
 	public void setModel(String model) {
 		this.model = model;
-	}
-
+	}	
+	
+	abstract public void accept(AutoElementVisitor visitor);
+	
 }

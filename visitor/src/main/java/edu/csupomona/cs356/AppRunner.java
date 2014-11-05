@@ -1,8 +1,11 @@
-package edu.csupomona.cs356.visitor;
+package edu.csupomona.cs356;
 
 import java.util.Arrays;
 
-public class Driver {
+import edu.csupomona.cs356.visitor.CheckRecallVisitor;
+import edu.csupomona.cs356.visitor.DoMaintenanceVisitor;
+
+public class AppRunner {
 
 	public static void main(String[] args) {
 		Wheel w1 = new Wheel();
@@ -29,6 +32,8 @@ public class Driver {
 		car.setPrice(19000);
 		car.setComponents(Arrays.asList(new AutoElement[]{w1, w2, engine, body}));
 		
+		//car.accept(new DoMaintenanceVisitor());
+		car.accept(new CheckRecallVisitor());
 	}
 
 }
