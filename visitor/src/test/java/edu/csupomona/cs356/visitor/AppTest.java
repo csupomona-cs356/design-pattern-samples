@@ -1,4 +1,4 @@
-package edu.csupomona.cs356.observer;
+package edu.csupomona.cs356.visitor;
 
 import junit.framework.Test;
 import junit.framework.TestCase;
