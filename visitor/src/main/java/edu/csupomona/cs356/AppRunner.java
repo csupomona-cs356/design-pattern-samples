@@ -3,7 +3,7 @@ package edu.csupomona.cs356;
 import java.util.Arrays;
 
 import edu.csupomona.cs356.visitor.CheckRecallVisitor;
-import edu.csupomona.cs356.visitor.DoMaintenanceVisitor;
+import edu.csupomona.cs356.visitor.CountVisitor;
 
 public class AppRunner {
 
@@ -17,23 +17,28 @@ public class AppRunner {
 		w2.setName("wheel2");
 		w2.setModel("Good Year");
 		w2.setPrice(69);
-		
+
 		Engine engine = new Engine();
 		engine.setName("Turbo Engine");
 		engine.setModel("GE");
 		engine.setPrice(6000);
-		
+
 		Body body = new Body();
 		body.setName("Red Body");
 		body.setPrice(2000);
-		
+
 		Car car = new Car();
 		car.setModel("Ford");
 		car.setPrice(19000);
 		car.setComponents(Arrays.asList(new AutoElement[]{w1, w2, engine, body}));
-		
+
 		//car.accept(new DoMaintenanceVisitor());
 		car.accept(new CheckRecallVisitor());
+
+
+		CountVisitor v = new CountVisitor();
+		car.accept(v);
+		System.out.println(v.getCounter());
 	}
 
 }

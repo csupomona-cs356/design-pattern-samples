@@ -18,10 +18,11 @@ public class Car extends AutoElement {
 
 	@Override
 	public void accept(AutoElementVisitor visitor) {
+		// BFS
 		for(AutoElement ae : components) {
 			ae.accept(visitor);
-		}		
-	}	
-		
-	
+		}
+	}
+
+
 }
