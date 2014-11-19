@@ -12,14 +12,13 @@ import java.util.Stack;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
-import cs356.csupomona.edu.commandpatterndemo.command.AddEditCommand;
-import cs356.csupomona.edu.commandpatterndemo.command.DeleteEditCommand;
-import cs356.csupomona.edu.commandpatterndemo.command.EditCommand;
-import cs356.csupomona.edu.commandpatterndemo.command.UpdateEditCommand;
+import cs356.csupomona.edu.commandpatterndemo.command.AddCommand;
+import cs356.csupomona.edu.commandpatterndemo.command.Command;
+import cs356.csupomona.edu.commandpatterndemo.command.DeleteCommand;
+import cs356.csupomona.edu.commandpatterndemo.command.UpdateCommand;
 
 
 public class MainActivity extends Activity {
-
 
 
     @InjectView(R.id.undo)
@@ -40,8 +39,8 @@ public class MainActivity extends Activity {
     @InjectView(R.id.container)
     LinearLayout container;
 
-    private Stack<EditCommand> executed = new Stack<EditCommand>();
-    private Stack<EditCommand> unexecuted = new Stack<EditCommand>();
+    Stack<Command> history = new Stack<Command>();
+    Stack<Command> redoList = new Stack<Command>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,62 +48,67 @@ public class MainActivity extends Activity {
         setContentView(R.layout.activity_main);
         ButterKnife.inject(this);
 
+        // ADD, UPDATE & DELETE
+
         addButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                AddEditCommand addEditCommand = new AddEditCommand(MainActivity.this, container);
-                addEditCommand.execute();
-                executed.push(addEditCommand);
-                unexecuted.clear();
+                Command addCommand = new AddCommand(MainActivity.this, container);
+                addCommand.execute();
+                history.push(addCommand);
+                redoList.clear();
             }
         });
+
         updateButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                UpdateEditCommand addEditCommand = new UpdateEditCommand(MainActivity.this, container);
-                addEditCommand.execute();
-                executed.push(addEditCommand);
-                unexecuted.clear();
+                Command updateCommand = new UpdateCommand(MainActivity.this, container);
+                updateCommand.execute();
+                history.push(updateCommand);
+                redoList.clear();
             }
         });
+
         deleteButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                DeleteEditCommand addEditCommand = new DeleteEditCommand(MainActivity.this, container);
-                addEditCommand.execute();
-                executed.push(addEditCommand);
-                unexecuted.clear();
+                Command deleteCommand = new DeleteCommand(MainActivity.this, container);
+                deleteCommand.execute();
+                history.push(deleteCommand);
+                redoList.clear();
             }
         });
 
 
+        // UNDO & REDO
 
         undoButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (!executed.isEmpty()) {
-                    EditCommand lastCommand = executed.pop();
-                    if (lastCommand != null) {
-                        lastCommand.undo();
-                        unexecuted.push(lastCommand);
-                    }
+                if (!history.isEmpty()) {
+                    Command command = history.pop();
+                    command.unexecute();
+
+                    redoList.push(command);
                 }
             }
         });
 
+
         redoButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (!unexecuted.isEmpty()) {
-                    EditCommand lastCommand = unexecuted.pop();
-                    if (lastCommand != null) {
-                        lastCommand.execute();
-                        executed.push(lastCommand);
-                    }
+                if (!redoList.isEmpty()) {
+                    Command command = redoList.pop();
+                    command.execute();
+
+                    history.push(command);
                 }
             }
         });
     }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
